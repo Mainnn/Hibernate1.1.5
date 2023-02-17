@@ -6,11 +6,14 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserService;
 import jm.task.core.jdbc.service.UserServiceImpl;
 import jm.task.core.jdbc.util.HibernateUtil;
+import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
+import org.hibernate.cfg.Configuration;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class TestMaing {
     private static UserService service = new UserServiceImpl();
@@ -40,7 +43,7 @@ public class TestMaing {
         service.dropUsersTable();
     }
     private static void runHibernate(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        Session session = Util.getSessionFactory().openSession();
         UserDao userDao = new UserDaoHibernateImpl();
         List<User> userList = new ArrayList<>();
         userDao.createUsersTable();
@@ -51,8 +54,8 @@ public class TestMaing {
         userList =service.getAllUsers();
         userList.stream()
                 .forEachOrdered(x -> System.out.println(x.toString()));
-        userDao.cleanUsersTable();
-        userDao.dropUsersTable();
+        //userDao.cleanUsersTable();
+        //userDao.dropUsersTable();
         session.beginTransaction().commit();
 
         session.close();
