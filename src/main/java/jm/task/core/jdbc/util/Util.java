@@ -34,16 +34,24 @@ public class Util {
             throw new RuntimeException(e);
         }
     }
+
     public static SessionFactory getSessionFactory(){
-        return sessionFactory = new Configuration()
-                .setProperty("hibernate.connection.url",url)
-                .setProperty("hibernate.connection.username",userName)
-                .setProperty("hibernate.connection.password",password)
-                .setProperty("show_sql, true","create")
-                .setProperty("hibernate.current_session_context_class","thread")
-                .setProperty("hibernate.current_session_context_class","thread")
-                .setProperty("hibernate.connection.autocommit","true")
-                .addAnnotatedClass(User.class).
-                buildSessionFactory();
+        if(sessionFactory == null){
+            synchronized (Util.class){
+                if(sessionFactory == null){
+                    return sessionFactory = new Configuration()
+                            .setProperty("hibernate.connection.url",url)
+                            .setProperty("hibernate.connection.username",userName)
+                            .setProperty("hibernate.connection.password",password)
+                            .setProperty("show_sql, true","create")
+                            .setProperty("hibernate.current_session_context_class","thread")
+                            .setProperty("hibernate.current_session_context_class","thread")
+                            .setProperty("hibernate.connection.autocommit","true")
+                            .addAnnotatedClass(User.class).
+                            buildSessionFactory();
+                }
+            }
+        }
+        return sessionFactory;
     }
 }
